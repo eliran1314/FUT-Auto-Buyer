@@ -69,10 +69,9 @@ export const searchTransferMarket = function (buyerSetting) {
       );
     // price for player already exists
     if (searchCriteria.maskedDefId) {
-      let futbinMaxPriceSearch = getValue(searchCriteria.maskedDefId);
+      let futbinMaxPriceSearch = getValue(`${searchCriteria.maskedDefId}_${dataSource.toLowerCase()}_price`);
       if (futbinMaxPriceSearch && futbinMaxPriceSearch.price) {
         const buyPrice = roundOffPrice((futbinMaxPriceSearch.price * futBinBuyPercent) / 100);
-        writeToLog(`Using user buy now price ${buyPrice} as max buy`, idProgressAutobuyer);
         searchCriteria.maxBuy = buyPrice;
       } else {
         writeToLog(`Buy now price not set for ${searchCriteria.maskedDefId}`, idProgressAutobuyer);
@@ -87,7 +86,7 @@ export const searchTransferMarket = function (buyerSetting) {
           setValue("searchFailedCount", 0);
           let validSearchCount = true;
           writeToLog(
-            `Found ${response.data.items.length} items, page - ${currentPage} => (minbid: ${searchCriteria.minBid} minbuy:${searchCriteria.minBuy})`,
+            `Found ${response.data.items.length} items, page - ${currentPage} => (maxbuy: ${searchCriteria.maxBuy} minbid: ${searchCriteria.minBid} minbuy:${searchCriteria.minBuy})`,
             idProgressAutobuyer
           );
 
