@@ -131,6 +131,12 @@ export const searchTransferMarket = function (buyerSetting) {
                 `${player.definitionId}_${dataSource.toLowerCase()}_price`
               );
               if (existingValue && existingValue.price) {
+                // check last update
+                if (existingValue.lastUpdateMins>15){
+                  writeToLog(
+                    `Price update long time ago ${player._staticData.name} ${existingValue.lastUpdateMins}`, idProgressAutobuyer);
+                    continue;
+                  }
                 const futBinBuyPrice = roundOffPrice(
                   (existingValue.price * futBinBuyPercent) / 100
                 );

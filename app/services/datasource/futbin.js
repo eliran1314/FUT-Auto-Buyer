@@ -70,6 +70,11 @@ const fetchPlayerPrices = async (playerIds, result) => {
 
       for (const id of [primaryId, ...playersIdArray]) {
         const prices = priceResponse[id].prices[platform];
+        const lastUpdate = priceResponse[id].prices[platform]['updated'];
+        const mins = lastUpdate.match(/(\d+) mins/);
+        if (!mins[1]){
+          continue;
+        }
         const lcPrice = prices.LCPrice;
         if (!lcPrice) {
           continue;
@@ -80,6 +85,7 @@ const fetchPlayerPrices = async (playerIds, result) => {
         const cacheValue = {
           expiryTimeStamp: new Date(Date.now() + 15 * 60 * 1000),
           price: cardPrice,
+          lastUpdateMins: mins[1],
         };
 
         setValue(cacheKey, cacheValue);
