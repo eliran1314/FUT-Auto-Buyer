@@ -67,6 +67,17 @@ export const searchTransferMarket = function (buyerSetting) {
       searchCriteria.minBuy = roundOffPrice(
         getRandNum(0, buyerSetting["idAbRandMinBuyInput"])
       );
+    // price for player already exists
+    if (searchCriteria.maskedDefId) {
+      let futbinMaxPriceSearch = getValue(searchCriteria.maskedDefId);
+      if (futbinMaxPriceSearch && futbinMaxPriceSearch.price) {
+        const buyPrice = roundOffPrice((futbinMaxPriceSearch.price * futBinBuyPercent) / 100);
+        writeToLog(`Using user buy now price ${buyPrice} as max buy`, idProgressAutobuyer);
+        searchCriteria.maxBuy = buyPrice;
+      } else {
+        writeToLog(`Buy now price not set for ${searchCriteria.maskedDefId}`, idProgressAutobuyer);
+      }
+    }
     services.Item.clearTransferMarketCache();
 
     services.Item.searchTransferMarket(searchCriteria, currentPage).observe(
